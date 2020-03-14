@@ -28,6 +28,8 @@ call plug#begin('~/.vim/plugged')
 " color
 Plug 'arzg/vim-substrata'
 Plug 'tomasr/molokai'
+Plug 'sainnhe/edge'
+
 
 Plug 'vim-airline/vim-airline'
 Plug 'tpope/vim-fugitive'
@@ -44,14 +46,35 @@ Plug 'simeji/winresizer'
 Plug 'plasticboy/vim-markdown'
 Plug 'kannokanno/previm'
 Plug 'tyru/open-browser.vim'
+Plug 'dart-lang/dart-vim-plugin'
+Plug 'natebosch/vim-lsc-dart'
+Plug 'zah/nim.vim'
 
 
 
 call plug#end()
 
 let g:lsp_async_completion = 1
+let g:lsc_auto_map = v:true
+let g:lsc_server_commands = {'dart': 'dart_language_server'}
+
+
+
+let g:dart_style_guide = 2
+
+
+
 
 colorscheme molokai
+
+
+" if executable('dart_language_server')
+"     au User lsp_setup call lsp#register_server({
+"         \ 'name': 'dart_language_server',
+"         \ 'cmd': {server_info->['dart_language_server', '-mode', 'stdio']},
+"         \ 'whitelist': ['dart'],
+"         \ })
+" endif
 
 " lsp 
 
@@ -81,37 +104,23 @@ if executable('css-languageserver')
         \ })
 endif
 
+" nim
+if executable('nimlsp')
+   au User lsp_setup call lsp#register_server({
+     \ 'name': 'nimlsp',
+     \ 'cmd': {server_info->['nimlsp']},
+     \ 'whitelist': ['nim'],
+     \ })
+endif
+
+
+
 augroup vimrcEx
   au BufRead * if line("'\"") > 0 && line("'\"") <= line("$") |
   \ exe "normal g`\"" | endif
 augroup END
 
-
-
-" function! Preserve(command)
-"     " Save the last search.
-"     let search = @/
-"     " Save the current cursor position.
-"     let cursor_position = getpos('.')
-"     " Save the current window position.
-"     normal! H
-"     let window_position = getpos('.')
-"     call setpos('.', cursor_position)
-"     " Execute the command.
-"     execute a:command
-"     " Restore the last search.
-"     let @/ = search
-"     " Restore the previous window position.
-"     call setpos('.', window_position)
-"     normal! zt
-"     " Restore the previous cursor position.
-"     call setpos('.', cursor_position)
-" endfunction
-"
-" function! Autopep8()
-"     call Preserve(':silent %!autopep8 -')
-" endfunction
-"
-" " Shift + F で自動修正
-" autocmd FileType python nnoremap <S-f> :call Autopep8()<CR>
-
+function! PHPLint()
+    let re = system('php -l ' . bufname(""))
+    echo re
+endfunction
