@@ -20,6 +20,9 @@ set smartindent
 set history=5000
 set belloff=all
 set viminfo='20,\"1000
+set background=dark
+set hidden
+set nofoldenable
 
 syntax enable
 
@@ -50,6 +53,11 @@ Plug 'dart-lang/dart-vim-plugin'
 Plug 'natebosch/vim-lsc-dart'
 Plug 'zah/nim.vim'
 
+Plug 'vim-jp/vital.vim'
+
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+Plug 'junegunn/fzf.vim'
+
 
 
 call plug#end()
@@ -65,7 +73,8 @@ let g:dart_style_guide = 2
 
 
 
-colorscheme molokai
+" colorscheme molokai
+colorscheme edge
 
 
 " if executable('dart_language_server')
@@ -120,7 +129,12 @@ augroup vimrcEx
   \ exe "normal g`\"" | endif
 augroup END
 
+
 function! PHPLint()
     let re = system('php -l ' . bufname(""))
     echo re
 endfunction
+
+set runtimepath+=~/translating.vim
+set runtimepath+=~/minimap.vim
+
