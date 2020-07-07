@@ -51,6 +51,10 @@ Plug 'kannokanno/previm'
 Plug 'tyru/open-browser.vim'
 Plug 'dart-lang/dart-vim-plugin'
 Plug 'natebosch/vim-lsc-dart'
+
+" Plug 'ryanolsonx/vim-lsp-typescript'
+" Plug 'ryanolsonx/vim-lsp-javascript'
+
 Plug 'zah/nim.vim'
 
 Plug 'vim-jp/vital.vim'
@@ -58,6 +62,7 @@ Plug 'vim-jp/vital.vim'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 
+Plug 'andys8/vim-elm-syntax'
 
 
 call plug#end()
@@ -122,6 +127,40 @@ if executable('nimlsp')
      \ })
 endif
 
+if executable('elm-language-server')
+  au User lsp_setup call lsp#register_server({
+    \ 'name': 'elm-language-server',
+    \ 'cmd': {server_info->[&shell, &shellcmdflag, 'elm-language-server --stdio']},
+    \ 'initialization_options': {
+      \ 'runtime': 'node',
+      \ 'elmPath': 'elm',
+      \ 'elmFormatPath': 'elm-format',
+      \ 'elmTestPath': 'elm-test',
+      \ 'rootPatterns': 'elm.json'
+      \ },
+    \ 'whitelist': ['elm'],
+    \ })
+  autocmd BufWritePre *.elm LspDocumentFormat
+endif
+
+" if executable('typescript-language-server')
+"     au User lsp_setup call lsp#register_server({
+"                 \ 'name': 'javascript support using typescript-language-server',
+"                 \ 'cmd': { server_info->[&shell, &shellcmdflag, 'typescript-language-server --stdio']},
+"                 \ 'root_uri': { server_info->lsp#utils#path_to_uri(lsp#utils#find_nearest_parent_directory(lsp#utils#get_buffer_path(), '.git/..'))},
+"                 \ 'whitelist': ['typescript', 'typescript.tsx', 'javascript', 'javascript.jsx', 'javascriptreact']
+"                 \ })
+" endif
+"
+" if executable('typescript-language-server')
+"     au User lsp_setup call lsp#register_server({
+"         \ 'name': 'typescript-language-server',
+"         \ 'cmd': {server_info->[&shell, &shellcmdflag, 'typescript-language-server --stdio']},
+"         \ 'root_uri':{server_info->lsp#utils#path_to_uri(lsp#utils#find_nearest_parent_file_directory(lsp#utils#get_buffer_path(), 'tsconfig.json'))},
+"         \ 'whitelist': ['typescript', 'typescript.tsx'],
+"         \ })
+" endif
+
 
 
 augroup vimrcEx
@@ -137,4 +176,5 @@ endfunction
 
 set runtimepath+=~/translating.vim
 set runtimepath+=~/minimap.vim
+set runtimepath+=~/adjust-space.vim
 
